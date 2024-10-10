@@ -1,0 +1,15 @@
+<!-- templates/main/product_detail.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Product Detail</title>
+</head>
+<body>
+    <h1>{{ product.name }}</h1>
+    <p>Price: {{ product.price }}</p>
+    <p>Quantity: {{ product.quantity }}</p>
+    <p>Remaining: {{ product.remaining }}</p>
+    <img src="{{ product.image_path }}" alt="{{ product.name }}">
+    <a href="{% url 'product_edit' pk=product.pk %}">Edit</a>
+</body>
+</html>

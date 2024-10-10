@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product List</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    
+    
+</head>
+<body>
+
+<div class="container mt-5">
+    <h2>PRODUCT LIST</h2>
+    <button type="button" class="btn btn-success mt-3" data-toggle="modal" data-target="#addProductModal">
+        Add Product
+    </button>
+    
+    <div class="container mt-5">
+    <a href="{% url 'dashboard' %}" class="btn btn-primary">Dashboard</a>
+    </div>
+
+    <!-- Table to display products -->
+    <table class="table mt-3">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Quantity</th>
+            <th>Remaining</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for product in products %}
+            <tr>
+                <td>{{ product.product_id }}</td>
+                <td>{{ product.name }}</td>
+                <td>{{ product.price }}</td>
+                <td>{{ product.quantity }}</td>
+                <td>{{ product.remaining }}</td>
+                <td>
+                    <!-- Button to trigger modal for editing product -->
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#editProductModal{{ product.product_id }}">
+                        Edit
+                    </button>
+                </td>
+            </tr>
+
+            <!-- Modal for editing product -->
+            <div class="modal fade" id="editProductModal{{ product.product_id }}" tabindex="-1" role="dialog" aria-labelledby="editProductModalLabel{{ product.product_id }}" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="editProductModalLabel{{ product.product_id }}">Edit Product: {{ product.name }}</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <!-- Form for editing product details -->
+                            <form method="post" action="{% url 'update_product' product.product_id %}">
+                                {% csrf_token %}
+                                <div class="form-group">
+                                    <label for="edit_name">Name:</label>
+                                    <input type="text" class="form-control" id="edit_name" name="edit_name" value="{{ product.name }}" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="edit_price">Price:</label>
+                                    <input type="number" class="form-control" id="edit_price" name="edit_price" value="{{ product.price }}" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="edit_quantity">Quantity:</label>
+                                    <input type="number" class="form-control" id="edit_quantity" name="edit_quantity" value="{{ product.quantity }}" required>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Update Product</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Button to trigger modal for adding new product -->
+    
+</div>
+
+<!-- Add Product Modal -->
+<div class="modal fade" id="addProductModal" tabindex="-1" role="dialog" aria-labelledby="addProductModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addProductModalLabel">Add Product</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Form for adding a new product -->
+                <form action="{% url 'add_product' %}" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="name">Product Name:</label>
+                        <input type="text" class="form-control" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="price">Price:</label>
+                        <input type="number" class="form-control" name="price" min="0" step="0.01" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="quantity">Quantity:</label>
+                        <input type="number" class="form-control" name="quantity" min="0" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Add Product</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Your existing JavaScript and Bootstrap imports -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
